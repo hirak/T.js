@@ -30,3 +30,5 @@ A DOM wrapper / JavaScript Template Engine
 ## How
 
     <script src="T.js"></script>
+
+enjoy!
