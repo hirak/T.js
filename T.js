@@ -1,0 +1,126 @@
+/*
+ * Copyright (c) 2008, nektixe. All rights reserved.
+ * Code licensed under the MIT License:
+ * Original Code: http://code.nanigac.com/source/view/427
+ *
+ * T.js
+ * DOMをwrapしテンプレートエンジン風に書けるようにするライブラリ
+ *
+ * 消費するグローバル変数は"T"です。
+ * 最終行の"T"を書き換えると変更できます。
+ */
+
+void function(nameSpace){
+    var document = this.document,
+        delimeter = " ",
+        htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var",
+        htmlHead = "body html head meta title",
+        html4Only = "acronym applet basefont big center dir font frame frameset isindex noframes s strike tt u wbr",
+        html5Only = "article aside audio bb caption command datagrid datalist details dialog embed figure footer header keygen mark menu meter nav output progress ruby rp rt section source time video";
+
+    if (this[nameSpace] != null) {
+        throw new ReferenceError;
+    }
+    this[nameSpace] = T;
+
+    function normalize(arr) {
+        var i, l, cur, j, ll, r=[];
+        for (i=0,l=arr.length; i<l; ++i) {
+            cur = arr[i];
+            if (cur instanceof Array || (cur.length && cur.item)) {
+                for (j=0, ll=cur.length; j<ll; ++j) {
+                    r[r.length] = cur[j];
+                }
+            } else {
+                r[r.length] = cur;
+            }
+        }
+        return r;
+    }
+
+    function TShorthand(list) {
+        var i, cur;
+        if (typeof list == "string") {
+            list = list.split(delimeter);
+        } else if (!(list instanceof Array)) {
+            list = htmlCore.split(delimeter);
+        }
+
+        for (i=0; cur = list[i++];) {
+            T[cur] = T(cur);
+        }
+    }
+    T.Shorthand = TShorthand;
+
+    T.Shorthand.head = function TShorthandHead() {
+        TShorthand(htmlHead);
+    };
+
+    T.Shorthand.html4 = function TShorthandHtml4() {
+        TShorthand(htmlCore + delimeter + html4Only);
+    };
+
+    T.Shorthand.html5 = function TShorthandHtml5() {
+        TShorthand(htmlCore + delimeter + html5Only);
+    };
+
+    T.Shorthand.full = function TShorthandFull() {
+        TShorthand(htmlCore + htmlHead + html4Only + html5Only);
+    };
+
+    function T(node) {
+        if (typeof node == "string") {
+            node = document.createElement(node);
+        }
+
+        if (arguments.length == 1) {
+            return curryT;
+        } else {
+            return curryT(normalize(arguments).slice(1));
+        }
+
+        function curryT(arg1) {
+            var tag = node.cloneNode(true),
+                attr, style, i, l,
+                args = normalize(arguments);
+
+            if (args.length == 0) {
+                return tag;
+            }
+            arg1 = args[0];
+
+            if (arg1.nodeType != null || typeof arg1 == "string") {
+                i = 0;
+            } else {
+                i = 1;
+                for (attr in arg1) {
+                    if (attr == "style" && arg1.style instanceof Object) {
+                        for (style in arg1.style) {
+                            tag.style[style] = arg1.style[style];
+                        }
+                    } else {
+                        tag[attr] = arg1[attr];
+                    }
+                }
+            }
+
+            for (l=args.length; i<l; ++i) {
+                if (args[i].nodeType != null) {
+                    tag.appendChild(args[i]);
+                } else {
+                    tag.appendChild(document.createTextNode(args[i]));
+                }
+            }
+            return tag;
+        }
+    }
+
+    T.DF = T.DocumentFragment = T(document.createDocumentFragment());
+    T.Comment = function TComment(str){
+        return document.createComment(str);
+    };
+    T.Text = function TText(str) {
+        return document.createTextNode(String(str));
+    };
+
+}("T");
