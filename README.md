@@ -16,7 +16,6 @@ T.jsはJavaScriptでのDOMの構築をより短く書けるようにする、ラ
 
 ## Sample
 
-    ```JavaScript
     with(T) var template =
     DocumentFragment(
         div({id:"header"},
@@ -35,7 +34,6 @@ T.jsはJavaScriptでのDOMの構築をより短く書けるようにする、ラ
     ;
 
     document.body.appendChild(template);
-    ```
 
 ## How
 T.jsを読み込むと使えるようになります。
@@ -45,19 +43,15 @@ T.jsを読み込むと使えるようになります。
 より短く書くために、省略記法の登録を推奨しています。
 Shorthand()に渡したタグリストは次から短く書くことができます。
 
-    ```JavaScript
     T.Shorthand("a div p span br");
     T.Shorthand.head();  //<html><head><title> etc enable
     T.Shorthand.html4(); //html4 only elements enable
     T.Shorthand.html5(); //html5 only elements enable
     T.Shorthand.full();  //html4 + html5 + head enable
-    ```
 
 引数を省略した場合、通常よく使われるタグが登録されます。
 
-    ```JavaScript
     T.Shorthand();
-    ```
 
 ## Syntax
 
@@ -137,7 +131,6 @@ document.createComment()のラッパーです。
 
 with statementを併用すると更に短く書くことができます。
 
-    ```JavaScript
     with(T) var template =
     DocumentFragment(
         h2("h2 text"),
