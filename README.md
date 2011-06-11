@@ -218,3 +218,10 @@ T.jsの最終行を書き換えると、グローバル変数名を好きなも�
 //-----------------
 MarkupBuilder.div("hoge")
 ```
+
+## 謝辞
+T.jsは私が一から作ったのではなく、nektixe氏のソースが元になっています。
+再配布を快諾してくださったnektixe氏に心より感謝いたします。
+
+Original Code: http://code.nanigac.com/source/view/427
+
