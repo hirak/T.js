@@ -16,42 +16,50 @@ T.jsはJavaScriptでのDOMの構築をより短く書けるようにする、ラ
 
 ## Sample
 
-    with(T) var template =
-    DocumentFragment(
-        div({id:"header"},
-            h1("Head Text 1")),
-        div({id:"content"},
-            h2("Head Text 2"),
-            p(
-                "description",
-                a({href:"http://github.com/"}, "a tag test")),
-            ul(
-                li("menu1"),
-                li("menu2"),
-                li("menu3"))),
-        div({id:"footer"},
-            address("sample@sample.com")))
-    ;
+```javascript
+with(T) var template =
+DocumentFragment(
+    div({id:"header"},
+        h1("Head Text 1")),
+    div({id:"content"},
+        h2("Head Text 2"),
+        p(
+            "description",
+            a({href:"http://github.com/"}, "a tag test")),
+        ul(
+            li("menu1"),
+            li("menu2"),
+            li("menu3"))),
+    div({id:"footer"},
+        address("sample@sample.com")))
+;
 
-    document.body.appendChild(template);
+document.body.appendChild(template);
+```
 
 ## How
 T.jsを読み込むと使えるようになります。
 
-    <script src="T.js"></script>
+```html
+<script src="T.js"></script>
+```
 
 より短く書くために、省略記法の登録を推奨しています。
 Shorthand()に渡したタグリストは次から短く書くことができます。
 
-    T.Shorthand("a div p span br");
-    T.Shorthand.head();  //<html><head><title> etc enable
-    T.Shorthand.html4(); //html4 only elements enable
-    T.Shorthand.html5(); //html5 only elements enable
-    T.Shorthand.full();  //html4 + html5 + head enable
+```javascript
+T.Shorthand("a div p span br");
+T.Shorthand.head();  //<html><head><title> etc enable
+T.Shorthand.html4(); //html4 only elements enable
+T.Shorthand.html5(); //html5 only elements enable
+T.Shorthand.full();  //html4 + html5 + head enable
+```
 
 引数を省略した場合、通常よく使われるタグが登録されます。
 
-    T.Shorthand();
+```javascript
+T.Shorthand();
+```
 
 ## Syntax
 
@@ -131,13 +139,33 @@ document.createComment()のラッパーです。
 
 with statementを併用すると更に短く書くことができます。
 
-    with(T) var template =
-    DocumentFragment(
-        h2("h2 text"),
-        p("description"),
-        ul(
-            li("menu1"),
-            li("menu2"),
-            li("menu3")));
+```javascript
+with(T) var template =
+DocumentFragment(
+    h2("h2 text"),
+    p("description"),
+    ul(
+        li("menu1"),
+        li("menu2"),
+        li("menu3")));
+```
 
+idとclassNameはよく使うので、CSS Selector likeな省略記法を用意してあります。
+
+```javascript
+//id -> "#id"
+T.div({id:"main"},"main content")
+↓
+T.div("#main")("main content")
+
+//className -> ".class"
+T.div({className:"entry current"},"entry content")
+↓
+T.div(".entry.current")("entry content")
+
+//combination
+T.div({id:"main",className:"entry current"},"entry content")
+↓
+T.div("#main.entry.current")("entry content")
+```
 

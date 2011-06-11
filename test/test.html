@@ -1,0 +1,151 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>T.js test</title>
+ <link rel="stylesheet" href="qunit.css"/>
+</head>
+<body>
+ <h1 id="qunit-header">T.js Test Runner</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+ <script src="qunit.js"></script>
+ <script src="../T.js"></script>
+ <script>
+T.Shorthand.full();
+
+//-----------------------------------------------------
+module("Shorthand");
+
+test("coreTags", function(){
+ var tagname, coreTags;
+
+ coreTags = "a abbr acronym address area b base bdo blockquote br button caption cite code col colgroup dd del dfn div dl dt em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var".split(' ');
+
+ for (var i=0; tagname = coreTags[i++]; ) {
+  ok(tagname in T, tagname + ' shorthand should be exists (coreTags)');
+ }
+
+});
+
+test('headTags', function(){
+ var tagname, headTags;
+ headTags = "html head title meta body".split(' ');
+ for (var i=0; tagname = headTags[i++]; ) {
+  ok(tagname in T, tagname + ' shorthand should be exists (headTags)');
+ }
+});
+
+test('html4Tags', function(){
+ var tagname, html4Tags;
+ html4Tags = "acronym applet basefont big center dir font frame frameset isindex noframes s strike tt u wbr".split(' ');
+ for (var i=0; tagname = html4Tags[i++]; ) {
+  ok(tagname in T, tagname + ' shorthand should be exists (html4Tags)');
+ }
+});
+
+test('html5Tags', function(){
+ var tagname, html5Tags;
+ html5Tags = "article aside audio bdi canvas command datalist details dialog embed figure figcaption footer header hgroup keygen m mark menu meter nav output progress rp rt ruby section summary time video".split(' ');
+ for (var i=0; tagname = html5Tags[i++]; ) {
+  ok(tagname in T, tagname + ' shorthand should be exists (html5Tags)');
+ }
+});
+
+//-------------------------------------------------------
+module("createElement");
+
+test("div tag create", function(){
+ var outer = document.createElement('div'),
+     outer2 = document.createElement('div'),
+     target = T.div(),
+     target2 = document.createElement('div');
+
+ outer.appendChild(target);
+ outer2.appendChild(target2);
+ equals(outer.innerHTML, outer2.innerHTML);
+});
+
+test("T plain using", function(){
+ var outer = T.div(
+  T("div", "sample text")
+ );
+ equals(outer.innerHTML, '<div>sample text</div>');
+});
+
+test("id create", function(){
+ var outer = T.div(
+ T.div({id:"testId"})
+ );
+ equals(outer.innerHTML, '<div id="testId"></div>');
+});
+
+test("class create", function(){
+ var outer = T.div(
+ T.div({className:"testClass testClass2"})
+ );
+ equals(outer.innerHTML,
+ '<div class="testClass testClass2"></div>');
+});
+
+test("children", function(){
+ var outer = T.div(
+  T.dl(
+   T.dt("dt"),
+   T.dd("dd"),
+   T.dt("dt"),
+   T.dd("dd")));
+ equals(outer.innerHTML,
+ '<dl><dt>dt</dt><dd>dd</dd><dt>dt</dt><dd>dd</dd></dl>');
+});
+
+test("DocumentFragment", function(){
+ var outer = T.div(
+  T.DocumentFragment(
+   T.a({href:"http://www.sample.com/"}, "sample.com"),
+   T.span("sample text")));
+ equals(outer.innerHTML,
+ '<a href="http://www.sample.com/">sample.com</a><span>sample text</span>');
+});
+
+test("TextNode", function(){
+ var outer = T.div(T.Text("sample"));
+ var outer2= T.div("sample");
+
+ equals(outer.innerHTML, outer2.innerHTML);
+});
+
+test("Comment", function(){
+ var outer = T.div(
+  T.Comment("sample comment"));
+
+ equals(outer.innerHTML, '<!--sample comment-->');
+});
+
+//---------------------------------------------
+module("advanced");
+
+test("CSS like syntax", function(){
+ var outer = T.div(
+  T.div("#hoge.foo.moo")("sample text"));
+
+ var expected= T.div(
+  T.div({id:"hoge",className:"foo moo"}, "sample text"));
+
+ equals(outer.innerHTML, expected.innerHTML, 'id & class');
+
+ outer = T.div(
+  T.div(".foo#hoge.moo#abc")("sample"));
+
+ expected = T.div(
+  T.div({id:"hoge",className:"foo moo"}, "sample"));
+
+ equals(outer.innerHTML, expected.innerHTML);
+});
+ </script>
+
+</body>
+</html>

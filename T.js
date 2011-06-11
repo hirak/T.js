@@ -16,7 +16,7 @@ void function(nameSpace){
         htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var",
         htmlHead = "body html head meta title",
         html4Only = "acronym applet basefont big center dir font frame frameset isindex noframes s strike tt u wbr",
-        html5Only = "article aside audio bb caption command datagrid datalist details dialog embed figure footer header keygen mark menu meter nav output progress ruby rp rt section source time video";
+        html5Only = "article aside audio bdi caption command datalist details dialog embed figure figcaption footer header hgroup keygen m mark menu meter nav output progress ruby rp rt section source summary time video";
 
     if (this[nameSpace] != null) {
         throw new ReferenceError;
@@ -65,7 +65,7 @@ void function(nameSpace){
     };
 
     T.Shorthand.full = function TShorthandFull() {
-        TShorthand(htmlCore + htmlHead + html4Only + html5Only);
+        TShorthand(htmlCore + delimeter + htmlHead + delimeter + html4Only + delimeter + html5Only);
     };
 
     function T(node) {
@@ -82,12 +82,26 @@ void function(nameSpace){
         function curryT(arg1) {
             var tag = node.cloneNode(true),
                 attr, style, i, l,
+                id, className,
                 args = normalize(arguments);
 
             if (args.length == 0) {
                 return tag;
             }
             arg1 = args[0];
+            if (args.length == 1 && typeof arg1 == "string") {
+                if (id = arg1.match(/#[^.#]+/)) {
+                    id = id[0].slice(1);
+                    tag.id = id;
+                }
+                if (className = arg1.match(/\.[^.#]+/g)) {
+                    className = className.join('').replace(/\./g,' ').slice(1);
+                    tag.className = className;
+                }
+                if (id || className) {
+                    return T(tag);
+                }
+            }
 
             if (arg1.nodeType != null || typeof arg1 == "string") {
                 i = 0;
