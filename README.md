@@ -10,7 +10,7 @@ T.jsはJavaScriptでのDOMの構築をより短く書けるようにする、ラ
 * Independent. 特定のライブラリに依存しません。
 * Lightweight. 圧縮版で2kBほどです。
 * Pure JavaScript. 独自文法を用意せず、可能な限り短く書けるように設計しました。
-* MIT Licence.
+* MIT Licence. -> LICENSE.md
 
 * 消費するグローバル変数名は"T"です。必要に応じて書き換えることも可能です。
 
@@ -65,12 +65,14 @@ T.Shorthand();
 
 ### 基本
 
+T(tagname, content, ...) が基本形です。
+
     T("div","text data")
     ↓
     <div>text data</div>
 
-しかしShorthand()で初期化してあると、こう書けるようになります。
-Shorthandを推奨します。以降はこちらの書き方で説明します。
+T.Shorthand()で初期化してあると、さらに短く書けるようになります。
+以降はこちらの書き方で説明します。
 
     T.div("text data")
     ↓
@@ -84,24 +86,28 @@ Shorthandを推奨します。以降はこちらの書き方で説明します�
 
 引数は可変長です。
 
-    T.ul(
-        T.li("1"),
-        T.li("2"),
-        T.li("3"),
-        ...
-        T.li("10"))
+```javascript
+T.ul(
+    T.li("1"),
+    T.li("2"),
+    T.li("3"),
+    ...
+    T.li("10"))
+```
 
-配列やHTMLCollectionを混ぜると、平準化されてからパースされます。
+配列やHTMLCollectionを混ぜることができます。
 機械的に複数の要素を作る場合に便利です。
 
-    T.ul(
-        T.li("1"),
-        [T.li("2"), T.li("3")],
-        ...
-        T.li("10"))
+```javascript
+T.ul(
+    T.li("1"),
+    [T.li("2"), T.li("3")],
+    ...
+    T.li("10"))
+```
 
 
-Attributeは第一引数にオブジェクト形式で渡します。
+attributeは第一引数にオブジェクト形式で渡します。
 
     T.div({id:"main"}, "content")
     ↓
@@ -125,15 +131,35 @@ classは"className"、forは"htmlFor"と書く必要があるので注意が必�
 
 ### 特別な関数
 
-* T.DocumentFragment()
+#### T.DocumentFragment()
 document.createDocumentFragment()のラッパーです。
+
+```javascript
+T.div(
+    T.DocumentFragment(
+        p("content1"),
+        p("content2"),
+        p("content3")))
+```
 他の要素と同じく可変長引数を渡すことができます。
-* T.DF()
+
+#### T.DF()
 T.DocumentFragment()のエイリアスです。
-* T.Text()
+
+#### T.Text()
 document.createTextNode()のラッパーです。
-* T.Comment()
+```javascript
+T.Text("text node")
+// -> document.createTextNode("text node")
+```
+
+
+#### T.Comment()
 document.createComment()のラッパーです。
+```javascript
+T.Comment("comment")
+// -> <!--comment-->
+```
 
 ### 応用
 
@@ -155,17 +181,40 @@ idとclassNameはよく使うので、CSS Selector likeな省略記法を用意�
 ```javascript
 //id -> "#id"
 T.div({id:"main"},"main content")
-↓
+//↓
 T.div("#main")("main content")
 
 //className -> ".class"
 T.div({className:"entry current"},"entry content")
-↓
+//↓
 T.div(".entry.current")("entry content")
 
 //combination
 T.div({id:"main",className:"entry current"},"entry content")
-↓
+//↓
 T.div("#main.entry.current")("entry content")
 ```
 
+この機能のため、思ったように要素が作れない場合があります。
+その場合はT.Textでテキストノードにしてから渡してください。
+
+```javascript
+T.div("#main.entry"); // ->function
+
+T.div(T.Text("#main.entry")); //<div>#main.entry</div>
+```
+
+### グローバル変数名を変更する
+デフォルトでは"T"を消費します。
+T.jsの最終行を書き換えると、グローバル変数名を好きなものに変えることができます。
+
+```javascript
+}("T"); //please change better!
+
+// ↓
+
+}("MarkupBuilder");
+
+//-----------------
+MarkupBuilder.div("hoge")
+```

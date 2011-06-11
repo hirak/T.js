@@ -1,13 +1,11 @@
 /*
- * Copyright (c) 2008, nektixe. All rights reserved.
+ * Copyright (c) 2008-2011, nektixe, Hiraku NAKANO. All rights reserved.
  * Code licensed under the MIT License:
  * Original Code: http://code.nanigac.com/source/view/427
  *
  * T.js
- * DOMをwrapしテンプレートエンジン風に書けるようにするライブラリ
- *
- * 消費するグローバル変数は"T"です。
- * 最終行の"T"を書き換えると変更できます。
+ * DOMBuilder-like template engine for JavaScript
+ * https://github.com/hirak/T.js
  */
 
 void function(nameSpace){
@@ -137,4 +135,4 @@ void function(nameSpace){
         return document.createTextNode(String(str));
     };
 
-}("T");
+}("T"); //please change better!
