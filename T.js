@@ -11,10 +11,10 @@
 void function(nameSpace){
     var document = this.document,
         delimeter = " ",
-        htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var",
-        htmlHead = "body html head meta title",
+        htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var body html head meta title",
         html4Only = "acronym applet basefont big center dir font frame frameset isindex noframes s strike tt u wbr",
-        html5Only = "article aside audio bdi caption command datalist details dialog embed figure figcaption footer header hgroup keygen m mark menu meter nav output progress ruby rp rt section source summary time video";
+        html5Only = "article aside audio bdi caption command datalist details dialog embed figure figcaption footer header hgroup keygen m mark menu meter nav output progress ruby rp rt section source summary time video",
+        STRING = "string";
 
     if (this[nameSpace] != null) {
         throw new ReferenceError;
@@ -38,7 +38,7 @@ void function(nameSpace){
 
     function TShorthand(list) {
         var i, cur;
-        if (typeof list == "string") {
+        if (typeof list == STRING) {
             list = list.split(delimeter);
         } else if (!(list instanceof Array)) {
             list = htmlCore.split(delimeter);
@@ -50,24 +50,20 @@ void function(nameSpace){
     }
     T.Shorthand = TShorthand;
 
-    T.Shorthand.head = function TShorthandHead() {
-        TShorthand(htmlHead);
-    };
-
-    T.Shorthand.html4 = function TShorthandHtml4() {
+    TShorthand.html4 = function TShorthandHtml4() {
         TShorthand(htmlCore + delimeter + html4Only);
     };
 
-    T.Shorthand.html5 = function TShorthandHtml5() {
+    TShorthand.html5 = function TShorthandHtml5() {
         TShorthand(htmlCore + delimeter + html5Only);
     };
 
-    T.Shorthand.full = function TShorthandFull() {
-        TShorthand(htmlCore + delimeter + htmlHead + delimeter + html4Only + delimeter + html5Only);
+    TShorthand.full = function TShorthandFull() {
+        TShorthand(htmlCore + delimeter + html4Only + delimeter + html5Only);
     };
 
     function T(node) {
-        if (typeof node == "string") {
+        if (typeof node == STRING) {
             node = document.createElement(node);
         }
 
@@ -87,7 +83,7 @@ void function(nameSpace){
                 return tag;
             }
             arg1 = args[0];
-            if (args.length == 1 && typeof arg1 == "string") {
+            if (args.length == 1 && typeof arg1 == STRING) {
                 if (id = arg1.match(/#[^.#]+/)) {
                     id = id[0].slice(1);
                     tag.id = id;
@@ -101,7 +97,7 @@ void function(nameSpace){
                 }
             }
 
-            if (arg1.nodeType != null || typeof arg1 == "string") {
+            if (arg1.nodeType != null || typeof arg1 == STRING) {
                 i = 0;
             } else {
                 i = 1;
@@ -132,7 +128,7 @@ void function(nameSpace){
         return document.createComment(str);
     };
     T.Text = function TText(str) {
-        return document.createTextNode(String(str));
+        return document.createTextNode(""+str);
     };
 
 }("T"); //please change better!
