@@ -17,6 +17,8 @@ T.jsはJavaScriptでのDOMの構築をより短く書けるようにする、ラ
 ## Sample
 
 ```javascript
+T.Shorthand();
+
 with(T) var template =
 DocumentFragment(
     div({id:"header"},
@@ -49,7 +51,6 @@ Shorthand()に渡したタグリストは次から短く書くことができま
 
 ```javascript
 T.Shorthand("a div p span br");
-T.Shorthand.head();  //<html><head><title> etc enable
 T.Shorthand.html4(); //html4 only elements enable
 T.Shorthand.html5(); //html5 only elements enable
 T.Shorthand.full();  //html4 + html5 + head enable
@@ -67,22 +68,34 @@ T.Shorthand();
 
 T(tagname, content, ...) が基本形です。
 
-    T("div","text data")
-    ↓
-    <div>text data</div>
+```javascript
+T("div","text data")
+```
+
+```html
+<div>text data</div>
+```
 
 T.Shorthand()で初期化してあると、さらに短く書けるようになります。
 以降はこちらの書き方で説明します。
 
-    T.div("text data")
-    ↓
-    <div>text data</div>
+```javascript
+T.div("text data")
+```
+
+```html
+<div>text data</div>
+```
 
 入れ子にできます。
 
-    T.div(T.p("paragraph"))
-    ↓
-    <div><p>paragraph</p></div>
+```javascript
+T.div(T.p("paragraph"))
+```
+
+```html
+<div><p>paragraph</p></div>
+```
 
 引数は可変長です。
 
@@ -109,24 +122,36 @@ T.ul(
 
 attributeは第一引数にオブジェクト形式で渡します。
 
-    T.div({id:"main"}, "content")
-    ↓
-    <div id="main">content</div>
+```javascript
+T.div({id:"main"}, "content")
+```
+
+```html
+<div id="main">content</div>
+```
 
 classは"className"、forは"htmlFor"と書く必要があるので注意が必要です。
 
-    T.div({className:"entry"}, "content")
-    ↓
-    <div class="entry">content</div>
+```javascript
+T.div({className:"entry"}, "content")
+```
 
-    label({htmlFor:"email"},
-        "E-mail",
-        input({type:"text", name:"email"}))
-    ↓
-    <label for="email">
-      E-mail
-      <input type="text" name="email">
-    </label>
+```html
+<div class="entry">content</div>
+```
+
+```javascript
+label({htmlFor:"email"},
+    "E-mail",
+    input({type:"text", name:"email"}))
+```
+
+```html
+<label for="email">
+  E-mail
+  <input type="text" name="email">
+</label>
+```
 
 
 ### 特別な関数
@@ -144,10 +169,11 @@ T.div(
 他の要素と同じく可変長引数を渡すことができます。
 
 #### T.DF()
-T.DocumentFragment()のエイリアスです。
+T.DocumentFragment()のエイリアスです。短く書きたいときに使ってください。
 
 #### T.Text()
 document.createTextNode()のラッパーです。
+
 ```javascript
 T.Text("text node")
 // -> document.createTextNode("text node")
@@ -156,6 +182,7 @@ T.Text("text node")
 
 #### T.Comment()
 document.createComment()のラッパーです。
+
 ```javascript
 T.Comment("comment")
 // -> <!--comment-->
@@ -164,10 +191,12 @@ T.Comment("comment")
 ### 応用
 
 with statementを併用すると更に短く書くことができます。
+ただし、i(), a(), b()といった名前の関数ができてしまうため、よく使われる変数と
+見分けがつきにくくなってしまいます。なので常用は推奨しません。
 
 ```javascript
 with(T) var template =
-DocumentFragment(
+DF(
     h2("h2 text"),
     p("description"),
     ul(
