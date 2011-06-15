@@ -144,6 +144,16 @@ test("CSS like syntax", function(){
   T.div({id:"hoge",className:"foo moo"}, "sample"));
 
  equals(outer.innerHTML, expected.innerHTML);
+
+ var expectTextNode = T.div(".hoge fugo");
+ ok(!(expectTextNode instanceof Function), "having SPACE -> not CSS like syntax");
+
+ expectTextNode = T.div("div.hoge#fuga");
+ ok(!(expectTextNode instanceof Function), "not starting with '.' or '#' -> not CSS like syntax");
+
+ expectTextNode = T.div("#hoge$fuga_suga");
+ ok(!(expectTextNode instanceof Function), "having '$' -> not CSS like syntax");
+
 });
  </script>
 

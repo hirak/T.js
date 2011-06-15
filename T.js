@@ -9,17 +9,18 @@
  */
 
 void function(nameSpace){
-    var document = this.document,
+    var global = Function("return this")(),
+        document = global.document,
         delimeter = " ",
         htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var body html head meta title",
         html4Only = "acronym applet basefont big center dir font frame frameset isindex noframes s strike tt u wbr",
         html5Only = "article aside audio bdi caption command datalist details dialog embed figure figcaption footer header hgroup keygen m mark menu meter nav output progress ruby rp rt section source summary time video",
         STRING = "string";
 
-    if (this[nameSpace] != null) {
+    if (global[nameSpace] != null) {
         throw new ReferenceError;
     }
-    this[nameSpace] = T;
+    global[nameSpace] = T;
 
     function normalize(arr) {
         var i, l, cur, j, ll, r=[];
@@ -67,15 +68,12 @@ void function(nameSpace){
             node = document.createElement(node);
         }
 
-        if (arguments.length == 1) {
-            return curryT;
-        } else {
-            return curryT(normalize(arguments).slice(1));
-        }
+        return arguments.length == 1 ? curryT
+                                      : curryT(normalize(arguments).slice(1));
 
         function curryT(arg1) {
             var tag = node.cloneNode(true),
-                attr, style, i, l,
+                attrName, styleName, currentAttr, i, l,
                 id, className,
                 args = normalize(arguments);
 
@@ -83,14 +81,13 @@ void function(nameSpace){
                 return tag;
             }
             arg1 = args[0];
-            if (args.length == 1 && typeof arg1 == STRING) {
+            if (args.length == 1 && typeof arg1 == STRING && /^[.#][0-9A-Za-z.#\-_]+$/(arg1)) {
                 if (id = arg1.match(/#[^.#]+/)) {
                     id = id[0].slice(1);
                     tag.id = id;
                 }
                 if (className = arg1.match(/\.[^.#]+/g)) {
-                    className = className.join('').replace(/\./g,' ').slice(1);
-                    tag.className = className;
+                    tag.className = className.join('').replace(/\./g,' ').slice(1);
                 }
                 if (id || className) {
                     return T(tag);
@@ -101,23 +98,23 @@ void function(nameSpace){
                 i = 0;
             } else {
                 i = 1;
-                for (attr in arg1) {
-                    if (attr == "style" && arg1.style instanceof Object) {
-                        for (style in arg1.style) {
-                            tag.style[style] = arg1.style[style];
+                for (attrName in arg1) {
+                    currentAttr = arg1[attrName]
+                    if (attrName == "style" && currentAttr instanceof Object) {
+                        for (styleName in currentAttr) {
+                            tag.style[styleName] = currentAttr[styleName];
                         }
                     } else {
-                        tag[attr] = arg1[attr];
+                        tag[attrName] = currentAttr;
                     }
                 }
             }
 
             for (l=args.length; i<l; ++i) {
-                if (args[i].nodeType != null) {
-                    tag.appendChild(args[i]);
-                } else {
-                    tag.appendChild(document.createTextNode(args[i]));
-                }
+                tag.appendChild(
+                    args[i].nodeType != null ? args[i]
+                                             : document.createTextNode(args[i])
+                );
             }
             return tag;
         }
