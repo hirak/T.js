@@ -67,12 +67,11 @@ void function(nameSpace){
         if (typeof node == STRING) {
             node = document.createElement(node);
         }
-
         return arguments.length == 1 ? curryT
-                                      : curryT(normalize(arguments).slice(1));
+                                     : curryT(normalize(arguments).slice(1));
 
         function curryT(arg1) {
-            var tag = node.cloneNode(true),
+            var tag = (typeof node == STRING) ? document.createElement(node) : node.cloneNode(true),
                 attrName, styleName, currentAttr, i, l,
                 id, className,
                 args = normalize(arguments);
@@ -81,7 +80,7 @@ void function(nameSpace){
                 return tag;
             }
             arg1 = args[0];
-            if (args.length == 1 && typeof arg1 == STRING && /^[.#][0-9A-Za-z.#\-_]+$/(arg1)) {
+            if (args.length == 1 && typeof arg1 == STRING && /^[.#][0-9A-Za-z.#\-_]+$/.exec(arg1)) {
                 if (id = arg1.match(/#[^.#]+/)) {
                     id = id[0].slice(1);
                     tag.id = id;
