@@ -1,0 +1,184 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <title>T.js benchmark test</title>
+ <script src="../T.js"></script>
+ <script>
+  T.Shorthand();
+  function benchmark() {
+   var LOOP = document.getElementById('count').value,
+       target = document.getElementById('target'),
+       result = document.getElementById('result');
+
+   result.innerHTML = '';
+
+   function sleepLoop(funcArr, sleeping) {
+    var current = funcArr[0],
+        next = funcArr.slice(1);
+    if (next.length == 1) {
+     next = next[0];
+     return function(){
+      current();
+      setTimeout(next, sleeping);
+     };
+    } else {
+     return function(){
+      current();
+      setTimeout(sleepLoop(next, sleeping), sleeping);
+     };
+    }
+   }
+
+   void function(){
+    var funcs = [].slice.call(arguments);
+    sleepLoop(funcs, 10)();
+   }(
+    function pureDOM() {
+     var start, div, i;
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      div = document.createElement('div');
+      div.setAttribute('class', 'hoge');
+      div.appendChild(document.createTextNode(i));
+      target.appendChild(div);
+     }
+     result.appendChild(T.p("pure DOM : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function pureDOM_with_DF() {
+     var start, div, i, df = document.createDocumentFragment();
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      div = document.createElement('div');
+      div.setAttribute('class', 'hoge');
+      div.appendChild(document.createTextNode(i));
+      df.appendChild(div);
+     }
+     target.appendChild(df);
+     result.appendChild(T.p("pure DOM with DocumentFragment : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function pureDOM_cloneNode() {
+     var start, base, div, i;
+     start = +new Date;
+     base = document.createElement('div');
+     base.setAttribute('class', 'hoge');
+     for (i=0; i<LOOP; ++i) {
+      div = base.cloneNode(true);
+      div.appendChild(document.createTextNode(i));
+      target.appendChild(div);
+     }
+     result.appendChild(T.p("pure DOM cloneNode : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function Tjs() {
+     var start, i;
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      target.appendChild(T("div",{className:"hoge"},i));
+     }
+     result.appendChild(T.p("T() : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function Tjs() {
+     var start, i;
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      target.appendChild(T.div({className:"hoge"},i));
+     }
+     result.appendChild(T.p("T.div() : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function Tjs_CSS() {
+     var start, i;
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      target.appendChild(T.div('.hoge')(i));
+     }
+     result.appendChild(T.p("T.js CSS style: " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function Tjs_with_template() {
+     var start, i, tpl = T.div('.hoge');
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      target.appendChild(tpl(i));
+     }
+     result.appendChild(T.p("T.js with template: " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function Tjs_with_template_with_DF() {
+     var start, i, tpl = T.div('.hoge'), df=T.DF();
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      df.appendChild(tpl(i));
+     }
+     target.appendChild(df);
+     result.appendChild(T.p("T.js with template & documentFragment : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function inner() {
+     var start, i, html = '';
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      html += '<div class="hoge">'
+      html += i;
+      html += '</div>'
+     }
+     target.innerHTML = html;
+     result.appendChild(T.p("innerHTML : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function inner_with_escape() {
+     var start, i, html = '';
+     start = +new Date;
+     for (i=0; i<LOOP; ++i) {
+      html += '<div class="';
+      html += escapeHTML('hoge');
+      html += '">';
+      html += escapeHTML(i);
+      html += '</div>'
+     }
+     target.innerHTML = html;
+     result.appendChild(T.p("innerHTML with escapeHTML : " + (new Date - start)));
+     target.innerHTML = '';
+    },
+
+    function pureinner() {
+     var start, i, LOOP2=LOOP/100, html = '';
+     start = +new Date;
+     for (i=0; i<LOOP2; ++i) {
+      target.innerHTML += '<div class="hoge">' + escapeHTML(i) + '</div>';
+     }
+     result.appendChild(T.p("innerHTML with += : " + (new Date - start) + " (LOOP count=" + LOOP2));
+     target.innerHTML = '';
+    }
+   );
+  }
+
+  function escapeHTML(str) {
+   return String(str).replace(/&/, '&amp;').replace(/</, '&lt;').replace(/>/, '&gt;').replace(/"/, '&quot;').replace(/'/, '&#39;');
+  }
+ </script>
+</head>
+<body>
+ <input id="count" value="10000">
+ <button id="btn">benchmark start</button>
+ <div id="target"></div>
+ <div id="result"></div>
+
+<script>
+ document.getElementById('btn').onclick = benchmark;
+</script>
+</body>
+</html>
