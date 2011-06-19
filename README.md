@@ -162,9 +162,9 @@ document.createDocumentFragment()のラッパーです。
 ```javascript
 T.div(
     T.DocumentFragment(
-        p("content1"),
-        p("content2"),
-        p("content3")))
+        T.p("content1"),
+        T.p("content2"),
+        T.p("content3")))
 ```
 他の要素と同じく可変長引数を渡すことができます。
 
