@@ -167,7 +167,7 @@
   }
 
   function escapeHTML(str) {
-   return String(str).replace(/&/, '&amp;').replace(/</, '&lt;').replace(/>/, '&gt;').replace(/"/, '&quot;').replace(/'/, '&#39;');
+   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
  </script>
 </head>
