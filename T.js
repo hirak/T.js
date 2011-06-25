@@ -71,7 +71,7 @@ void function(nameSpace){
                                      : curryT(normalize(arguments).slice(1));
 
         function curryT(arg1) {
-            var tag = (typeof node == STRING) ? document.createElement(node) : node.cloneNode(true),
+            var tag = node.cloneNode(true),
                 attrName, styleName, currentAttr, i, l,
                 id, className,
                 args = normalize(arguments);
@@ -93,13 +93,11 @@ void function(nameSpace){
                 }
             }
 
-            if (arg1.nodeType != null || typeof arg1 == STRING) {
-                i = 0;
-            } else {
+            if (arg1.constructor == Object) {
                 i = 1;
                 for (attrName in arg1) {
                     currentAttr = arg1[attrName]
-                    if (attrName == "style" && currentAttr instanceof Object) {
+                    if (attrName == "style") {
                         for (styleName in currentAttr) {
                             tag.style[styleName] = currentAttr[styleName];
                         }
@@ -107,6 +105,8 @@ void function(nameSpace){
                         tag[attrName] = currentAttr;
                     }
                 }
+            } else {
+                i = 0;
             }
 
             for (l=args.length; i<l; ++i) {
@@ -121,7 +121,7 @@ void function(nameSpace){
 
     T.DF = T.DocumentFragment = T(document.createDocumentFragment());
     T.Comment = function TComment(str){
-        return document.createComment(str);
+        return document.createComment(""+str);
     };
     T.Text = function TText(str) {
         return document.createTextNode(""+str);
