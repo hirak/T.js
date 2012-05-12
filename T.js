@@ -9,7 +9,7 @@
  */
 
 void function(nameSpace){
-    var global = Function("return this")(),
+    var global = window,
         document = global.document,
         delimeter = " ",
         htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var body html head meta title",
@@ -93,7 +93,7 @@ void function(nameSpace){
                 }
             }
 
-            if (arg1.constructor == Object) {
+            if (arg1.constructor === Object) {
                 i = 1;
                 for (attrName in arg1) {
                     currentAttr = arg1[attrName]
