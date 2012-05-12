@@ -21,9 +21,9 @@ T.Shorthand();
 
 with(T) var template =
 DocumentFragment(
-    div({id:"header"},
+    div("#header")(
         h1("Head Text 1")),
-    div({id:"content"},
+    div("#content")(
         h2("Head Text 2"),
         p(
             "description",
@@ -32,7 +32,7 @@ DocumentFragment(
             li("menu1"),
             li("menu2"),
             li("menu3"))),
-    div({id:"footer"},
+    div("#footer")(
         address("sample@sample.com")))
 ;
 
