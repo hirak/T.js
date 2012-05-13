@@ -284,7 +284,7 @@ callbackは関数だけでなく、HTMLNodeを渡すこともできます。こ�
 T.$([1,2]).map(T.li(".list"));  //<li class="list">1</li><li class="list">2</li>
 ```
 
-入れ子になった配列に対し、複数のcallbackを指定できます。<table>を作るのに便利です。
+入れ子になった配列に対し、複数のcallbackを指定できます。tableを作るのに便利です。
 
 ```javascript
 var data = [
