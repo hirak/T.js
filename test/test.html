@@ -155,6 +155,77 @@ test("CSS like syntax", function(){
  ok(!(expectTextNode instanceof Function), "having '$' -> not CSS like syntax");
 
 });
+
+module("helper");
+
+test("$", function(){
+    var $ed = T.$([]);
+    ok($ed.hasOwnProperty("map"), "$([]) has 'map'");
+    ok($ed.hasOwnProperty("chunk"), "$([]) has 'chunk'");
+});
+
+test("$chunk", function(){
+    var arr = [1,2,3,4,5,6,7,8]
+      , expected
+      , chunked
+      ;
+
+    expected = [[1,2],[3,4],[5,6],[7,8]];
+    chunked = T.$(arr).chunk(2);
+    equals(JSON.stringify(chunked), JSON.stringify(expected));
+
+    expected = [[1,2,3],[4,5,6],[7,8]];
+    chunked = T.$(arr).chunk(3);
+    equals(JSON.stringify(chunked), JSON.stringify(expected));
+
+    expected = [[1,2,3],[4,5,6],[7,8,'']];
+    chunked = T.$(arr).chunk(3,'');
+    equals(JSON.stringify(chunked), JSON.stringify(expected));
+});
+
+test("$map", function(){
+    var arr = [1,2,3];
+    equals(
+        T.div(T.$(arr).map(T.b)).innerHTML,
+        T.div(T.b(1),T.b(2),T.b(3)).innerHTML
+    );
+
+    arr = [[1,2],[3,4]];
+    equals(
+        T.table(T.$(arr).map(T.tr, T.td)).innerHTML,
+        T.table(T.tr(T.td(1),T.td(2)),T.tr(T.td(3),T.td(4))).innerHTML
+    );
+
+    equals(
+        T.table(T.$(arr).map(T.tr, [T.td(".even"), T.td(".odd")])).innerHTML,
+        T.table(
+          T.tr(T.td(".even")(1), T.td(".odd")(2)),
+          T.tr(T.td(".even")(3), T.td(".odd")(4))
+        ).innerHTML
+    );
+
+    arr = [1,2,3,4,5];
+    equals(
+        T.ul(T.$(arr).map({first:T.li(".first"), middle:T.li, last:T.li(".last")})).innerHTML,
+        T.ul(
+          T.li(".first")(1),
+          T.li(2),
+          T.li(3),
+          T.li(4),
+          T.li(".last")(5)).innerHTML
+    );
+});
+
+test("$nest", function(){
+    var outer = T.div(T.$([1,2,3]).map(T.$nest(T.span, T.span(".foo"), T.b)));
+    var expected = '<span><span class="foo"><b>1</b></span></span>'
+                 + '<span><span class="foo"><b>2</b></span></span>'
+                 + '<span><span class="foo"><b>3</b></span></span>';
+
+    equals(outer.innerHTML, expected);
+});
+
+
  </script>
 
 </body>
