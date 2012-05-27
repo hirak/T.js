@@ -232,10 +232,10 @@ T.div("#main.entry"); // ->function
 T.div(T.Text("#main.entry")); //<div>#main.entry</div>
 ```
 
-### Helper
+## Helper
 テンプレートを書きやすくするためのヘルパー関数を用意してあります。
 
-#### T.$nest(callback1 [, callback2, ...])
+### T.$nest(callback1 [, callback2, ...])
 複数の関数を引数に取り、入れ子に組み合わせた新たな関数を返します。これ単独で使うより、以下のmapと併用することを想定しています。
 
 ```javascript
@@ -251,7 +251,7 @@ var nestedTemplate = function(){
 };
 ```
 
-#### T.$(array).chunk(count [, pad])
+### T.$(array).chunk(count [, pad])
 T.$()でArrayをくくると、.mapおよび.chunkというメソッドが増えます。
 .chunkは指定した大きさで配列を分割します。PHPのarray_chunk()に相当します。
 
@@ -268,7 +268,7 @@ T.$([1,2,3,4]).chunk(3);     //[ [1,2,3], [4] ]
 T.$([1,2,3,4]).chunk(3, ''); //[ [1,2,3], [4,'',''] ]
 ```
 
-#### T.$(array).map(callback [, callback2, callback3, ...])
+### T.$(array).map(callback [, callback2, callback3, ...])
 Array.prototype.mapではいくつかの引数をcallbackに渡してしまうため、T.jsとの相性がよくありません。
 ヘルパーのmap関数では機能を大幅に拡張しました。
 
