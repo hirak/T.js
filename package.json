@@ -1,0 +1,18 @@
+{
+  "author": "hiraku <hiraku@tojiru.net> (http://blog.tojiru.net/)",
+  "name": "T.js",
+  "description": "DOM Builder based Template Engine for JavaScript",
+  "version": "0.0.0",
+  "homepage": "https://github.com/hirak/T.js",
+  "main": "T.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hirak/T.js.git"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
