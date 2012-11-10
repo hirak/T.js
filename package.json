@@ -1,6 +1,6 @@
 {
   "author": "hiraku <hiraku@tojiru.net> (http://blog.tojiru.net/)",
-  "name": "T.js",
+  "name": "t.js",
   "description": "DOM Builder based Template Engine for JavaScript",
   "version": "0.0.0",
   "homepage": "https://github.com/hirak/T.js",
