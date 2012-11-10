@@ -9,8 +9,8 @@
  */
 
 void function(nameSpace){
-    var global = window
-      , document = global.document
+    var global = Function("return this")()
+      , document
       , delimeter = " "
       , htmlCore = "a abbr address area b base bdo blockquote br button canvas comment cite code col colgroup del div dfn dl dt dd em fieldset form h1 h2 h3 h4 h5 h6 hr i iframe img input ins kbd label legend li link map noscript object ol optgroup option p param pre q samp script select small span strong style sub sup table tbody td textarea tfoot th thead tr ul var body html head meta title"
       , html4Only = "acronym applet basefont big center dir font frame frameset isindex noframes s strike tt u wbr"
@@ -21,10 +21,20 @@ void function(nameSpace){
       , _slice = Array.prototype.slice
       ;
 
-    if (global[nameSpace] != null) {
-        throw new ReferenceError;
+    if (typeof window == 'undefined') {
+        //node.js
+        document = require('./document.js');
+        module.exports = T;
+    } else {
+        //browser
+        document = global.document;
+
+        if (typeof define == 'undefined') {
+            global[nameSpace] = T;
+        } else {
+            define(T);
+        }
     }
-    global[nameSpace] = T;
 
     function normalize(arr) {
         var i, l, cur, j, ll, r=[];
@@ -54,17 +64,18 @@ void function(nameSpace){
         }
     }
     T.Shorthand = TShorthand;
+    TShorthand();
 
     TShorthand.html4 = function TShorthandHtml4() {
-        TShorthand(htmlCore + delimeter + html4Only);
+        TShorthand(html4Only);
     };
 
     TShorthand.html5 = function TShorthandHtml5() {
-        TShorthand(htmlCore + delimeter + html5Only);
+        TShorthand(html5Only);
     };
 
     TShorthand.full = function TShorthandFull() {
-        TShorthand(htmlCore + delimeter + html4Only + delimeter + html5Only);
+        TShorthand(html4Only + delimeter + html5Only);
     };
 
     function T(node) {
@@ -83,7 +94,6 @@ void function(nameSpace){
             if (args.length == 0) {
                 return tag;
             }
-            arg1 = args[0];
             if (args.length == 1 && typeof arg1 == STRING && /^[.#][0-9A-Za-z.#\-_]+$/.exec(arg1)) {
                 if (id = arg1.match(/#[^.#]+/)) {
                     id = id[0].slice(1);
