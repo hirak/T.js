@@ -1,0 +1,10 @@
+{
+  "name": "T.js",
+  "version": "1.0.0",
+  "main": "T.min.js",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ]
+}
