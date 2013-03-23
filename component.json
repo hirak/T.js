@@ -4,6 +4,13 @@
   "main": "T.min.js",
   "ignore": [
     "**/.*",
+    "LICENSE.md",
+    "README.md",
+    "T.js",
+    "benchmark/",
+    "test/",
+    "document.js",
+    "package.json",
     "node_modules",
     "components"
   ]
